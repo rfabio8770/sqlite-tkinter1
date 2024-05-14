@@ -16,6 +16,7 @@ class Ventana(Frame):
         self.telefono = StringVar()
 
 
+        # esta sentencia faltaba
         self.master.columnconfigure(0, weight=1)
         self.master.rowconfigure(0, weight=1)
         self.master.rowconfigure(1, weight=5)
