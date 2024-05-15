@@ -15,6 +15,7 @@ class Ventana(Frame):
         self.correo  = StringVar()
         self.telefono = StringVar()
 
+        self.master.columnconfigure(0, weight=1)
         self.master.rowconfigure(0, weight=1)
         self.master.rowconfigure(1, weight=5)
         self.base_datos = Comunicacion()
