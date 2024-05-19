@@ -101,32 +101,88 @@ class Ventana(Frame):
 
 
     def actualizar_tabla(self):
-        pass
+        self.limpiar_campos()
+        datos = self.base_datos.mostrar_datos()
+        self.tabla.delete(*self.tabla.get_children())
+        i = - 1
+        for dato in datos:
+            i += 1
+            self.tabla.insert('', i, text= datos[i][1:2][0], values=datos[i][2:5])
 
     def agregar_datos(self):
-        pass
+        nombre = self.nombre.get()
+        edad = self.edad.get()
+        correo = self.correo.get()
+        telefono = self.telefono.get()
+        datos = (edad, correo, telefono)
+        if nombre and edad and correo and telefono != "":
+            self.tabla.insert("",0, text = nombre, values=datos)
+            self.base_datos.insertar_datos(nombre, edad, correo, telefono)
+            self.limpiar_campos()
 
     def limpiar_campos(self):
-        pass
+        self.nombre.set("")
+        self.edad.set("")
+        self.correo.set("")
+        self.telefono.set("")
 
     def actualizar_datos(self):
-        pass
+        item = self.tabla.focus()
+        self.data = self.tabla.item(item)
+        nombre = self.data['text']
+        datos = self.base_datos.mostrar_datos()
+        for fila in datos:
+            Id = fila[0]
+            nombre_bd = fila[1]
+            if nombre_bd == nombre:
+                if Id != None:
+                    nombre = self.nombre.get()
+                    edad = self.edad.get()
+                    correo = self.correo.get()
+                    telefono = self.telefono.get()
+                    if nombre and edad and correo and telefono != '':
+                        self.base_datos.actualizar_datos(Id, nombre, edad, correo, telefono)
+                        self.tabla.delete(*self.tabla.getchildren())
+                        datos = self.base_datos.mostrar_datos()
+                        i = -1
+                        for dato in datos:
+                            i += 1
+                            self.tabla.insert('', i, text= datos[i][1:2][0], values=datos[i][2:5])
+                        self.actualizar_tabla()
+                            
 
     def salir(self):
         pass
 
-    def obtener_fila(self):
+    def obtener_fila(self, event):
         item = self.tabla.focus()
         self.data = self.tabla.item(item)
         self.nombre.set(self.data['text'])
-        self.nombre.set(self.data['values'][0])
-        self.nombre.set(self.data['values'][1])
-        self.nombre.set(self.data['values'][2])
+        self.edad.set(self.data['values'][0])
+        self.correo.set(self.data['values'][1])
+        self.telefono.set(self.data['values'][2])
 
     
-    def eliminar_datos(self):
+    def eliminar_datos(self, event):
         self.limpiar_campos()
-
+        item = self.tabla.selection()[0]
+        x = messagebox('Información', "Desea eliminar?")
+        if x == "yes":
+            self.tabla.delete(item)
+            self.base_datos.elimina_datos(self.data['text'])
+    """
+    def guardar_datos(self):
+        self.limpiar_campos()
+        datos = self.base_datos.mostrar_datos()
+        i = - 1
+        nombre, edad, correo, telefono = [], [], [], []
+        for dato in dato:
+            i += 1
+            nombre.append(datos[i][1])
+            edad.append(datos[i][2])
+            correo.append(datos[i][3])
+            telefono.append(datos[i][4])
+    """
 if __name__ == "__main__":
     ventana = Tk()
     ventana.title("Ejemplo tkinter y sqlite3")
